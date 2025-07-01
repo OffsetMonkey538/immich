@@ -303,6 +303,7 @@ export const schemaFromDatabase = async (postgres: Sql, options: LoadSchemaOptio
     enums: schemaEnums,
     extensions: schemaExtensions,
     tables: Object.values(tablesMap),
+    overrides: [],
     warnings,
   };
 };

@@ -4,6 +4,7 @@ import { transformEnums } from 'src/sql-tools/to-sql/transformers/enum.transform
 import { transformExtensions } from 'src/sql-tools/to-sql/transformers/extension.transformer';
 import { transformFunctions } from 'src/sql-tools/to-sql/transformers/function.transformer';
 import { transformIndexes } from 'src/sql-tools/to-sql/transformers/index.transformer';
+import { transformOverrides } from 'src/sql-tools/to-sql/transformers/override.transformer';
 import { transformParameters } from 'src/sql-tools/to-sql/transformers/parameter.transformer';
 import { transformTables } from 'src/sql-tools/to-sql/transformers/table.transformer';
 import { transformTriggers } from 'src/sql-tools/to-sql/transformers/trigger.transformer';
@@ -14,7 +15,7 @@ import { SchemaDiff, SchemaDiffToSqlOptions } from 'src/sql-tools/types';
  * Convert schema diffs into SQL statements
  */
 export const schemaDiffToSql = (items: SchemaDiff[], options: SchemaDiffToSqlOptions = {}): string[] => {
-  return items.flatMap((item) => asSql(item).map((result) => result + withComments(options.comments, item)));
+  return items.flatMap((item) => asSql(item, options).map((result) => result + withComments(options.comments, item)));
 };
 
 const transformers: SqlTransformer[] = [
@@ -27,11 +28,12 @@ const transformers: SqlTransformer[] = [
   transformParameters,
   transformTables,
   transformTriggers,
+  transformOverrides,
 ];
 
-const asSql = (item: SchemaDiff): string[] => {
+const asSql = (item: SchemaDiff, options: SchemaDiffToSqlOptions): string[] => {
   for (const transform of transformers) {
-    const result = transform(item);
+    const result = transform(item, options);
     if (!result) {
       continue;
     }

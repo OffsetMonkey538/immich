@@ -5,6 +5,15 @@ import { compareTriggers } from 'src/sql-tools/diff/comparers/trigger.comparer';
 import { compare } from 'src/sql-tools/helpers';
 import { Comparer, DatabaseTable, Reason, SchemaDiff } from 'src/sql-tools/types';
 
+const newTable = (name: string) => ({
+  name,
+  columns: [],
+  indexes: [],
+  constraints: [],
+  triggers: [],
+  synchronize: true,
+});
+
 export const compareTables: Comparer<DatabaseTable> = {
   onMissing: (source) => [
     {
@@ -13,33 +22,10 @@ export const compareTables: Comparer<DatabaseTable> = {
       reason: Reason.MissingInTarget,
     },
     // TODO merge constraints into table create record when possible
-    ...compareTable(
-      source,
-      {
-        name: source.name,
-        columns: [],
-        indexes: [],
-        constraints: [],
-        triggers: [],
-        synchronize: true,
-      },
-
-      { columns: false },
-    ),
+    ...compareTable(source, newTable(source.name), { columns: false }),
   ],
   onExtra: (target) => [
-    ...compareTable(
-      {
-        name: target.name,
-        columns: [],
-        indexes: [],
-        constraints: [],
-        triggers: [],
-        synchronize: true,
-      },
-      target,
-      { columns: false },
-    ),
+    ...compareTable(newTable(target.name), target, { columns: false }),
     {
       type: 'table.drop',
       tableName: target.name,

@@ -1,6 +1,7 @@
 import { compareEnums } from 'src/sql-tools/diff/comparers/enum.comparer';
 import { compareExtensions } from 'src/sql-tools/diff/comparers/extension.comparer';
 import { compareFunctions } from 'src/sql-tools/diff/comparers/function.comparer';
+import { compareOverrides } from 'src/sql-tools/diff/comparers/overrides.comparer';
 import { compareParameters } from 'src/sql-tools/diff/comparers/parameter.comparer';
 import { compareTables } from 'src/sql-tools/diff/comparers/table.comparer';
 import { compare } from 'src/sql-tools/helpers';
@@ -23,6 +24,7 @@ export const schemaDiff = (source: DatabaseSchema, target: DatabaseSchema, optio
     ...compare(source.functions, target.functions, options.functions, compareFunctions),
     ...compare(source.enums, target.enums, options.enums, compareEnums),
     ...compare(source.tables, target.tables, options.tables, compareTables),
+    ...compare(source.overrides, target.overrides, options.overrides, compareOverrides),
   ];
 
   type SchemaName = SchemaDiff['type'];
@@ -46,6 +48,9 @@ export const schemaDiff = (source: DatabaseSchema, target: DatabaseSchema, optio
     'trigger.drop': [],
     'parameter.set': [],
     'parameter.reset': [],
+    'override.create': [],
+    'override.update': [],
+    'override.drop': [],
   };
 
   for (const item of items) {
@@ -76,6 +81,9 @@ export const schemaDiff = (source: DatabaseSchema, target: DatabaseSchema, optio
     ...itemMap['table.drop'],
     ...itemMap['enum.drop'],
     ...itemMap['function.drop'],
+    ...itemMap['override.drop'],
+    ...itemMap['override.create'],
+    ...itemMap['override.update'],
   ];
 
   return {

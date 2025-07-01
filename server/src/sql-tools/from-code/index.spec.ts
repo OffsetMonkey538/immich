@@ -17,6 +17,7 @@ describe(schemaFromCode.name, () => {
       extensions: [],
       parameters: [],
       tables: [],
+      overrides: [],
       warnings: [],
     });
   });

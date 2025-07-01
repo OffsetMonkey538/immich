@@ -9,6 +9,7 @@ import { processForeignKeyColumns } from 'src/sql-tools/from-code/processors/for
 import { processForeignKeyConstraints } from 'src/sql-tools/from-code/processors/foreign-key-constraint.processor';
 import { processFunctions } from 'src/sql-tools/from-code/processors/function.processor';
 import { processIndexes } from 'src/sql-tools/from-code/processors/index.processor';
+import { processOverrides } from 'src/sql-tools/from-code/processors/override.processor';
 import { processPrimaryKeyConstraints } from 'src/sql-tools/from-code/processors/primary-key-contraint.processor';
 import { processTables } from 'src/sql-tools/from-code/processors/table.processor';
 import { processTriggers } from 'src/sql-tools/from-code/processors/trigger.processor';
@@ -40,6 +41,7 @@ const processors: Processor[] = [
   processPrimaryKeyConstraints,
   processIndexes,
   processTriggers,
+  processOverrides,
 ];
 
 export type SchemaFromCodeOptions = {
@@ -60,6 +62,7 @@ export const schemaFromCode = (options: SchemaFromCodeOptions = {}) => {
       enums: [],
       extensions: [],
       parameters: [],
+      overrides: [],
       warnings: [],
     };
 

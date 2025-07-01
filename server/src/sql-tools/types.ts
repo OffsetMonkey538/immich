@@ -285,6 +285,7 @@ export type DatabaseSchema = {
   tables: DatabaseTable[];
   extensions: DatabaseExtension[];
   parameters: DatabaseParameter[];
+  overrides: DatabaseOverride[];
   warnings: string[];
 };
 
@@ -294,6 +295,7 @@ export type SchemaDiffOptions = {
   enums?: DiffOptions;
   extension?: DiffOptions;
   parameters?: DiffOptions;
+  overrides?: DiffOptions;
 };
 
 export type DiffOptions = {
@@ -435,12 +437,22 @@ export type DatabaseIndex = {
   synchronize: boolean;
 };
 
+export type OverrideType = 'function' | 'index';
+
+export type DatabaseOverride = {
+  name: string;
+  type: OverrideType;
+  value: string;
+  synchronize: boolean;
+};
+
 export type LoadSchemaOptions = {
   schemaName?: string;
 };
 
 export type SchemaDiffToSqlOptions = {
   comments?: boolean;
+  overrideTableName?: string;
 };
 
 export type SchemaDiff = { reason: string } & (
@@ -463,6 +475,9 @@ export type SchemaDiff = { reason: string } & (
   | { type: 'parameter.reset'; databaseName: string; parameterName: string }
   | { type: 'enum.create'; enum: DatabaseEnum }
   | { type: 'enum.drop'; enumName: string }
+  | { type: 'override.create'; override: DatabaseOverride }
+  | { type: 'override.update'; override: DatabaseOverride }
+  | { type: 'override.drop'; overrideName: string }
 );
 
 export type CompareFunction<T> = (source: T, target: T) => SchemaDiff[];
