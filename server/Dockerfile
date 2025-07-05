@@ -1,7 +1,6 @@
 # dev build
-FROM ghcr.io/immich-app/base-server-dev:202505131114@sha256:cf4507bbbf307e9b6d8ee9418993321f2b85867da8ce14d0a20ccaf9574cb995 AS dev
+FROM ghcr.io/immich-app/base-server-dev:commit-a050847fdf07f1e492919810121419f65ec9eb45 AS dev
 
-RUN apt-get install --no-install-recommends -yqq tini
 WORKDIR /usr/src/app
 COPY server/package.json server/package-lock.json ./
 RUN npm ci && \
@@ -99,7 +98,7 @@ RUN npm run build
 
 
 # prod build
-FROM ghcr.io/immich-app/base-server-prod:202505061115@sha256:9971d3a089787f0bd01f4682141d3665bcf5efb3e101a88e394ffd25bee4eedb
+FROM ghcr.io/immich-app/base-server-prod:commit-a050847fdf07f1e492919810121419f65ec9eb45
 
 WORKDIR /usr/src/app
 ENV NODE_ENV=production \
